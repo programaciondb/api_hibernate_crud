@@ -8,7 +8,6 @@ import spark.Spark;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
 public class MueblesAPIREST {
     private MuebleDAOInterface dao;
@@ -24,7 +23,10 @@ public class MueblesAPIREST {
 
 
 
-
+        Spark.get("/muebles", (request, response) -> {
+            List<Mueble> muebles = dao.devolverTodos();
+            return gson.toJson(muebles);
+        });
 
 
 
@@ -71,7 +73,16 @@ public class MueblesAPIREST {
         // Endpoint para obtener un mueble por su ID
 
 
-
+        Spark.get("/muebles/id/:id", (request, response) -> {
+            Long id = Long.parseLong(request.params(":id"));
+            Mueble mueble = dao.buscarPorId(id);
+            if (mueble != null) {
+                return gson.toJson(mueble);
+            } else {
+                response.status(404);
+                return "Mueble no encontrado";
+            }
+        });
 
 
 
